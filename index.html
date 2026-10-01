@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiger Runner</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #000;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* BACKGROUND ATAS */
+#skorAtas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 25vh;
+
+    background-image: url("oke.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 15px;
+    font-size: 22px;
+    font-weight: bold;
+    z-index: 300;
+
+    text-shadow:
+        2px 2px 4px #000,
+        0 0 8px #000;
+}
+
+#game {
+    position: relative;
+    width: 100vw;
+    max-width: 1200px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    margin-top: 25vh;
+    background: #65d7ff;
+}
+
+#matahari {
+    position: absolute;
+    top: 7%;
+    left: 52%;
+    font-size: 55px;
+    z-index: 1;
+}
+
+.awan {
+    position: absolute;
+    font-size: 45px;
+    z-index: 2;
+    white-space: nowrap;
+}
+
+#awan1 {
+    left: -100px;
+    top: 8%;
+}
+
+#awan2 {
+    left: 35%;
+    top: 18%;
+}
+
+#awan3 {
+    left: 75%;
+    top: 5%;
+}
+
+.gunung {
+    position: absolute;
+    bottom: 18%;
+    font-size: 125px;
+    line-height: 125px;
+    white-space: nowrap;
+    z-index: 3;
+    opacity: 0.75;
+}
+
+#gunung1 {
+    left: -220px;
+}
+
+#gunung2 {
+    left: 300px;
+}
+
+#gunung3 {
+    left: 820px;
+}
+
+.pohon {
+    position: absolute;
+    bottom: calc(18% - 17px);
+    width: 80px;
+    height: 115px;
+    font-size: 75px;
+    line-height: 105px;
+    z-index: 8;
+    white-space: nowrap;
+}
+
+#pohon1 {
+    left: -100px;
+}
+
+#pohon2 {
+    left: 180px;
+}
+
+#pohon3 {
+    left: 480px;
+}
+
+#pohon4 {
+    left: 800px;
+}
+
+#pohon5 {
+    left: 1100px;
+}
+
+#tanahBergerak {
+    position: absolute;
+    left: -300px;
+    bottom: 0;
+    width: 300%;
+    height: 18%;
+    z-index: 10;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #9a4d0a 0px,
+            #9a4d0a 90px,
+            #a9550c 90px,
+            #a9550c 180px
+        );
+}
+
+#rumput {
+    position: absolute;
+    left: -300px;
+    bottom: 18%;
+    width: 300%;
+    height: 12px;
+    z-index: 12;
+    background: #238c27;
+}
+
+#harimau {
+    position: absolute;
+    left: 76%;
+    bottom: 18%;
+    width: 70px;
+    height: 70px;
+    font-size: 52px;
+    line-height: 70px;
+    z-index: 25;
+}
+
+.rintangan {
+    position: absolute;
+    bottom: 18%;
+    width: 60px;
+    height: 60px;
+    font-size: 42px;
+    line-height: 60px;
+    z-index: 20;
+}
+
+#layarMulai {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#layarMulai h1 {
+    color: white;
+    font-size: 34px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#tombolMulai {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    background: #168cff;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#gameOver {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#gameOver h1 {
+    color: white;
+    font-size: 38px;
+}
+
+#skor {
+    color: white;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+#tombolRestart {
+    padding: 14px 25px;
+    border: none;
+    border-radius: 12px;
+    background: #168cff;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#tombolLompat {
+    margin-top: 110px;
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    border: 4px solid white;
+    background: #168cff;
+    color: white;
+    font-size: 34px;
+    font-weight: bold;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    z-index: 200;
+}
+
+#tombolLompat:active {
+    transform: scale(0.9);
+}
+
+#teksLompat {
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    margin-top: 8px;
+    margin-bottom: 40px;
+    text-align: center;
+}
+</style>
+</head>
+
+<body>
+
+<div id="skorAtas">
+    SKOR:
+    <span id="nilaiSkor">0</span>
+    detik
+</div>
+
+<div id="game">
+
+    <div id="matahari">☀️</div>
+
+    <div class="awan" id="awan1">☁️</div>
+    <div class="awan" id="awan2">☁️</div>
+    <div class="awan" id="awan3">☁️</div>
+
+    <div class="gunung" id="gunung1">⛰️</div>
+    <div class="gunung" id="gunung2">⛰️</div>
+    <div class="gunung" id="gunung3">⛰️</div>
+
+    <div class="pohon" id="pohon1">🌳</div>
+    <div class="pohon" id="pohon2">🌳</div>
+    <div class="pohon" id="pohon3">🌳</div>
+    <div class="pohon" id="pohon4">🌳</div>
+    <div class="pohon" id="pohon5">🌳</div>
+
+    <div id="tanahBergerak"></div>
+    <div id="rumput"></div>
+
+    <div id="harimau">🐅</div>
+
+    <div id="layarMulai">
+        <h1>🐅 TIGER RUNNER</h1>
+        <button id="tombolMulai">▶ MULAI</button>
+    </div>
+
+    <div id="gameOver">
+        <h1>GAME OVER</h1>
+        <div id="skor">Skor: 0 detik</div>
+        <button id="tombolRestart">🔄 MAIN LAGI</button>
+    </div>
+
+</div>
+
+<button id="tombolLompat">⬆</button>
+
+<div id="teksLompat">LOMPAT</div>
+
+<script>
+const game =
+    document.getElementById("game");
+
+const harimau =
+    document.getElementById("harimau");
+
+const tanahBergerak =
+    document.getElementById("tanahBergerak");
+
+const rumput =
+    document.getElementById("rumput");
+
+const tombolMulai =
+    document.getElementById("tombolMulai");
+
+const tombolRestart =
+    document.getElementById("tombolRestart");
+
+const tombolLompat =
+    document.getElementById("tombolLompat");
+
+const layarMulai =
+    document.getElementById("layarMulai");
+
+const gameOver =
+    document.getElementById("gameOver");
+
+const skorText =
+    document.getElementById("skor");
+
+const nilaiSkor =
+    document.getElementById("nilaiSkor");
+
+const pohon = [
+    document.getElementById("pohon1"),
+    document.getElementById("pohon2"),
+    document.getElementById("pohon3"),
+    document.getElementById("pohon4"),
+    document.getElementById("pohon5")
+];
+
+const gunung = [
+    document.getElementById("gunung1"),
+    document.getElementById("gunung2"),
+    document.getElementById("gunung3")
+];
+
+const awan = [
+    document.getElementById("awan1"),
+    document.getElementById("awan2"),
+    document.getElementById("awan3")
+];
+
+let gameBerjalan = false;
+let sedangMelompat = false;
+let bisaLompat = true;
+
+let kecepatan = 2.5;
+
+let waktuMulaiGame = 0;
+let waktuGame = 0;
+let waktuSpawn = 0;
+
+let rintanganAktif = false;
+
+let posisiTanah = -300;
+let posisiRumput = -300;
+
+let posisiPohon = [
+    -100,
+    180,
+    480,
+    800,
+    1100
+];
+
+let posisiGunung = [
+    -220,
+    300,
+    820
+];
+
+let posisiAwan = [
+    -100,
+    35,
+    75
+];
+
+let waktuFrameSebelumnya =
+    performance.now();
+
+
+function mulaiGame() {
+
+    layarMulai.style.display =
+        "none";
+
+    gameOver.style.display =
+        "none";
+
+    document
+        .querySelectorAll(".rintangan")
+        .forEach(function(item) {
+            item.remove();
+        });
+
+    rintanganAktif = false;
+
+    gameBerjalan = true;
+
+    sedangMelompat = false;
+    bisaLompat = true;
+
+    kecepatan = 2.5;
+
+    waktuMulaiGame =
+        performance.now();
+
+    waktuGame = 0;
+    waktuSpawn = 0;
+
+    nilaiSkor.innerText =
+        "0";
+
+    skorText.innerText =
+        "Skor: 0 detik";
+
+    harimau.style.transform =
+        "translateY(0px)";
+}
+
+
+tombolMulai.onclick =
+function() {
+    mulaiGame();
+};
+
+
+tombolRestart.onclick =
+function() {
+    mulaiGame();
+};
+
+
+function jalankanLompatan() {
+
+    if (!gameBerjalan) return;
+    if (sedangMelompat) return;
+    if (!bisaLompat) return;
+
+    sedangMelompat = true;
+    bisaLompat = false;
+
+    const durasi = 1000;
+    const tinggi = 90;
+
+    const waktuMulai =
+        performance.now();
+
+    function animasiLompat(
+        waktuSekarang
+    ) {
+
+        if (!gameBerjalan) {
+
+            harimau.style.transform =
+                "translateY(0px)";
+
+            sedangMelompat = false;
+
+            return;
+        }
+
+        const waktu =
+            waktuSekarang -
+            waktuMulai;
+
+        const progress =
+            waktu / durasi;
+
+        if (progress >= 1) {
+
+            harimau.style.transform =
+                "translateY(0px)";
+
+            sedangMelompat = false;
+
+            return;
+        }
+
+        const posisi =
+            Math.sin(
+                progress * Math.PI
+            ) * tinggi;
+
+        harimau.style.transform =
+            "translateY(-" +
+            posisi +
+            "px)";
+
+        requestAnimationFrame(
+            animasiLompat
+        );
+    }
+
+    requestAnimationFrame(
+        animasiLompat
+    );
+
+    setTimeout(function() {
+        bisaLompat = true;
+    }, 1000);
+}
+
+
+tombolLompat.onclick =
+function() {
+    jalankanLompatan();
+};
+
+
+document.addEventListener(
+    "keydown",
+    function(e) {
+
+        if (e.code === "Space") {
+
+            e.preventDefault();
+
+            jalankanLompatan();
+        }
+    }
+);
+
+
+function buatRintangan() {
+
+    if (!gameBerjalan) return;
+    if (rintanganAktif) return;
+
+    rintanganAktif = true;
+
+    const rintangan =
+        document.createElement("div");
+
+    rintangan.className =
+        "rintangan";
+
+    const jenis = [
+        "🪨",
+        "🌵",
+        "🪵"
+    ];
+
+    rintangan.innerText =
+        jenis[
+            Math.floor(
+                Math.random() *
+                jenis.length
+            )
+        ];
+
+    game.appendChild(
+        rintangan
+    );
+
+    let x = -70;
+
+    rintangan.style.left =
+        x + "px";
+
+    rintangan.dataset.posisi =
+        x;
+}
+
+
+function gerakkanRintangan(delta) {
+
+    const rintangan =
+        document.querySelector(
+            ".rintangan"
+        );
+
+    if (!rintangan) {
+
+        rintanganAktif = false;
+
+        return;
+    }
+
+    let x =
+        parseFloat(
+            rintangan.dataset.posisi
+        );
+
+    x +=
+        kecepatan *
+        delta *
+        0.06;
+
+    rintangan.dataset.posisi =
+        x;
+
+    rintangan.style.left =
+        x + "px";
+
+    cekTabrakan(
+        rintangan
+    );
+
+    if (
+        x >
+        game.clientWidth + 100
+    ) {
+
+        rintangan.remove();
+
+        rintanganAktif = false;
+    }
+}
+
+
+function gerakkanBackground(delta) {
+
+    posisiTanah +=
+        kecepatan *
+        delta *
+        0.06;
+
+    if (posisiTanah >= 0) {
+        posisiTanah = -300;
+    }
+
+    tanahBergerak.style.left =
+        posisiTanah + "px";
+
+
+    posisiRumput +=
+        kecepatan *
+        delta *
+        0.06;
+
+    if (posisiRumput >= 0) {
+        posisiRumput = -300;
+    }
+
+    rumput.style.left =
+        posisiRumput + "px";
+
+
+    for (
+        let i = 0;
+        i < pohon.length;
+        i++
+    ) {
+
+        posisiPohon[i] +=
+            kecepatan *
+            delta *
+            0.045;
+
+        if (
+            posisiPohon[i] >
+            game.clientWidth + 100
+        ) {
+
+            posisiPohon[i] =
+                -130;
+        }
+
+        pohon[i].style.left =
+            posisiPohon[i] + "px";
+    }
+
+
+    for (
+        let i = 0;
+        i < gunung.length;
+        i++
+    ) {
+
+        posisiGunung[i] +=
+            kecepatan *
+            delta *
+            0.018;
+
+        if (
+            posisiGunung[i] >
+            game.clientWidth + 200
+        ) {
+
+            posisiGunung[i] =
+                -300;
+        }
+
+        gunung[i].style.left =
+            posisiGunung[i] + "px";
+    }
+
+
+    for (
+        let i = 0;
+        i < awan.length;
+        i++
+    ) {
+
+        posisiAwan[i] +=
+            (
+                0.12 +
+                i * 0.04
+            ) *
+            delta *
+            0.06;
+
+        if (
+            posisiAwan[i] > 110
+        ) {
+
+            posisiAwan[i] =
+                -15;
+        }
+
+        awan[i].style.left =
+            posisiAwan[i] + "%";
+    }
+}
+
+
+function cekTabrakan(rintangan) {
+
+    if (!gameBerjalan) return;
+    if (sedangMelompat) return;
+
+    const harimauRect =
+        harimau.getBoundingClientRect();
+
+    const rintanganRect =
+        rintangan.getBoundingClientRect();
+
+    const margin = 8;
+
+    const tabrakan =
+
+        harimauRect.left + margin <
+        rintanganRect.right &&
+
+        harimauRect.right - margin >
+        rintanganRect.left &&
+
+        harimauRect.top + margin <
+        rintanganRect.bottom &&
+
+        harimauRect.bottom - margin >
+        rintanganRect.top;
+
+
+    if (tabrakan) {
+        selesaiGame();
+    }
+}
+
+
+function selesaiGame() {
+
+    if (!gameBerjalan) return;
+
+    gameBerjalan = false;
+
+    const skorAkhir =
+        Math.floor(
+            waktuGame / 1000
+        );
+
+    nilaiSkor.innerText =
+        skorAkhir;
+
+    skorText.innerText =
+        "Skor: " +
+        skorAkhir +
+        " detik";
+
+    gameOver.style.display =
+        "flex";
+}
+
+
+function gameLoop(waktuSekarang) {
+
+    let delta =
+        waktuSekarang -
+        waktuFrameSebelumnya;
+
+    waktuFrameSebelumnya =
+        waktuSekarang;
+
+    if (delta > 50) {
+        delta = 50;
+    }
+
+
+    if (gameBerjalan) {
+
+        waktuGame =
+            waktuSekarang -
+            waktuMulaiGame;
+
+
+        const detik =
+            Math.floor(
+                waktuGame / 1000
+            );
+
+
+        if (
+            nilaiSkor.innerText !=
+            detik
+        ) {
+
+            nilaiSkor.innerText =
+                detik;
+        }
+
+
+        gerakkanBackground(
+            delta
+        );
+
+
+        gerakkanRintangan(
+            delta
+        );
+
+
+        waktuSpawn += delta;
+
+
+        if (
+            !rintanganAktif &&
+            waktuSpawn >= 2500
+        ) {
+
+            waktuSpawn = 0;
+
+            buatRintangan();
+        }
+
+
+        kecepatan =
+            2.5 +
+            Math.floor(
+                waktuGame / 3000
+            ) *
+            0.15;
+    }
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+}
+
+
+requestAnimationFrame(
+    gameLoop
+);
+
+</script>
+
+</body>
+  </html>
